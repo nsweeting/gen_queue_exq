@@ -1,4 +1,4 @@
-defmodule GenQueue.TestHelpers do
+defmodule GenQueue.ExqTestHelpers do
   def stop_process(pid) do
     try do
       Process.flag(:trap_exit, true)

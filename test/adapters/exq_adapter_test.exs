@@ -1,7 +1,7 @@
 defmodule GenQueue.ExqAdapterTest do
   use ExUnit.Case
 
-  import GenQueue.TestHelpers
+  import GenQueue.ExqTestHelpers
 
   alias GenQueue.ExqTest
   alias GenQueue.ExqJob
