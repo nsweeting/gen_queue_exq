@@ -6,7 +6,7 @@ defmodule GenQueue.ExqAdapterTest do
   alias GenQueue.ExqTest
   alias GenQueue.ExqJob
 
-  describe "push/3" do
+  describe "push/2" do
     test "enqueues and runs job from module" do
       Process.register(self(), :gen_queue_exq_test)
       {:ok, pid} = ExqTest.start_link()
