@@ -25,7 +25,7 @@ defmodule GenQueue.ExqMockAdapter do
 
   defp do_enqueue(gen_queue, queue, {module, args, meta}) do
     job = {module, args, Map.put(meta, :jid, UUID.uuid4())}
-    send(self(), {queue, job})
+    send(:test, {queue, job})
     {:ok, job}
   end
 end

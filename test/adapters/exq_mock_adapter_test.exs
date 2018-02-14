@@ -1,54 +1,46 @@
-defmodule GenQueue.ExqAdapterTest do
+defmodule GenQueue.ExqMockAdapterTest do
   use ExUnit.Case
 
   import GenQueue.ExqTestHelpers
 
-  alias GenQueue.ExqMockTest
-  alias GenQueue.ExqMockJob
+  Application.put_env(:gen_queue_exq, GenQueue.ExqMockAdapterTest.Enqueuer, adapter: GenQueue.ExqMockAdapter)
+
+  defmodule Enqueuer do
+    use GenQueue, otp_app: :gen_queue_exq
+  end
+  
+  defmodule Job do
+  end
+
+  setup do
+    Process.register(self(), :test)
+    :ok
+  end
 
   describe "push/2" do
-    test "sends the queue and job back to the process from module" do
-      {:ok, pid} = ExqMockTest.start_link()
-      {:ok, _} = ExqMockTest.push("default", ExqMockJob)
-      assert_receive({"default", {ExqMockJob, [], %{jid: _}}}, 5_000)
-      stop_process(pid)
+    test "sends the queue/job back to the :test process from module" do
+      {:ok, _} = Enqueuer.push("default", Job)
+      assert_receive({"default", {Job, [], %{jid: _}}}, 5_000)
     end
 
-    test "enqueues and runs job from module tuple" do
-      {:ok, pid} = ExqMockTest.start_link()
-      {:ok, _} = ExqMockTest.push("default", {ExqMockJob})
-      assert_receive({"default", {ExqMockJob, [], %{jid: _}}}, 5_000)
-      stop_process(pid)
+    test "sends the queue/job back to the :test process from module tuple" do
+      {:ok, _} = Enqueuer.push("default", {Job})
+      assert_receive({"default", {Job, [], %{jid: _}}}, 5_000)
     end
 
-    test "enqueues and runs job from module and args" do
-      {:ok, pid} = ExqMockTest.start_link()
-      {:ok, _} = ExqMockTest.push("default", {ExqMockJob, ["foo", "bar"]})
-      assert_receive({"default", {ExqMockJob, ["foo", "bar"], %{jid: _}}}, 5_000)
-      stop_process(pid)
+    test "sends the queue/job back to the :test process from module and args" do
+      {:ok, _} = Enqueuer.push("default", {Job, ["foo", "bar"]})
+      assert_receive({"default", {Job, ["foo", "bar"], %{jid: _}}}, 5_000)
     end
 
-    test "enqueues a job with :in delay" do
-      {:ok, pid} = ExqMockTest.start_link()
-      {:ok, _} = ExqMockTest.push("default", {ExqMockJob, [], %{in: 0}})
-      assert_receive({"default", {ExqMockJob, [], %{in: _, jid: _}}}, 5_000)
-      stop_process(pid)
+    test "sends the queue/job back to the :test process with :in delay" do
+      {:ok, _} = Enqueuer.push("default", {Job, [], %{in: 0}})
+      assert_receive({"default", {Job, [], %{in: _, jid: _}}}, 5_000)
     end
 
-    test "enqueues a job with :at delay" do
-      {:ok, pid} = ExqMockTest.start_link()
-      {:ok, _} = ExqMockTest.push("default", {ExqMockJob, [], %{at: DateTime.utc_now()}})
-      assert_receive({"default", {ExqMockJob, [], %{at: _, jid: _}}}, 5_000)
-      stop_process(pid)
+    test "sends the queue/job back to the :test process with :at delay" do
+      {:ok, _} = Enqueuer.push("default", {Job, [], %{at: DateTime.utc_now()}})
+      assert_receive({"default", {Job, [], %{at: _, jid: _}}}, 5_000)
     end
   end
-end
-
-Application.put_env(:gen_queue_exq, GenQueue.ExqMockTest, adapter: GenQueue.ExqMockAdapter)
-
-defmodule GenQueue.ExqMockTest do
-  use GenQueue, otp_app: :gen_queue_exq
-end
-
-defmodule GenQueue.ExqMockJob do
 end
