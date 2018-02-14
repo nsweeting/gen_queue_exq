@@ -3,7 +3,7 @@
   "earmark": {:hex, :earmark, "1.2.4", "99b637c62a4d65a20a9fb674b8cffb8baa771c04605a80c911c4418c69b75439", [:mix], [], "hexpm"},
   "ex_doc": {:hex, :ex_doc, "0.18.2", "993e0a95e9fbb790ac54ea58e700b45b299bd48bc44b4ae0404f28161f37a83e", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, repo: "hexpm", optional: false]}], "hexpm"},
   "exq": {:hex, :exq, "0.10.1", "4eabf31c1c81f5e7baab152f5ee7bd1b7760123f071578055e9f1b469eecb377", [:mix], [{:poison, ">= 1.2.0 or ~> 2.0", [hex: :poison, repo: "hexpm", optional: false]}, {:redix, ">= 0.5.0", [hex: :redix, repo: "hexpm", optional: false]}, {:uuid, ">= 1.1.0", [hex: :uuid, repo: "hexpm", optional: false]}], "hexpm"},
-  "gen_queue": {:hex, :gen_queue, "0.1.2", "5e3a0d0b64b264cfc077552f2f7cc93888173f685dae342773ed3f29f10b0c3b", [:mix], [], "hexpm"},
+  "gen_queue": {:hex, :gen_queue, "0.1.3", "31dbb13d7ba8628dd83ad912e0dba8d88842c47a42d12d948c9b20a1f15a7832", [:mix], [], "hexpm"},
   "poison": {:hex, :poison, "3.1.0", "d9eb636610e096f86f25d9a46f35a9facac35609a7591b3be3326e99a0484665", [:mix], [], "hexpm"},
   "redix": {:hex, :redix, "0.7.0", "14a22cba1137600ccf8d64baf1b291689add779488f9a193d7d83dcc3e03a7a4", [:mix], [{:connection, "~> 1.0", [hex: :connection, repo: "hexpm", optional: false]}], "hexpm"},
   "uuid": {:hex, :uuid, "1.1.8", "e22fc04499de0de3ed1116b770c7737779f226ceefa0badb3592e64d5cfb4eb9", [:mix], [], "hexpm"},

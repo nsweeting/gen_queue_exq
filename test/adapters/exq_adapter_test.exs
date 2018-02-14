@@ -14,8 +14,12 @@ defmodule GenQueue.ExqAdapterTest do
       send(:test, :performed)
     end
   
-    def perform("foo", "bar") do
-      send(:test, {:foo, :bar})
+    def perform(arg1) do
+      send(:test, {:performed, arg1})
+    end
+
+    def perform(arg1, arg2) do
+      send(:test, {:performed, arg1, arg2})
     end
   end
 
@@ -27,41 +31,52 @@ defmodule GenQueue.ExqAdapterTest do
   describe "push/2" do
     test "enqueues and runs job from module" do
       {:ok, pid} = Enqueuer.start_link()
-      {:ok, job} = Enqueuer.push("default", Job)
-      assert_receive(:performed, 5_000)
-      assert {Job, [], %{jid: _}} = job
+      {:ok, job} = Enqueuer.push(Job)
+      assert_receive(:performed)
+      assert {Job, [], %{queue: "default", jid: _}} = job
       stop_process(pid)
     end
 
     test "enqueues and runs job from module tuple" do
       {:ok, pid} = Enqueuer.start_link()
-      {:ok, job} = Enqueuer.push("default", {Job})
-      assert_receive(:performed, 5_000)
-      assert {Job, [], %{jid: _}} = job
+      {:ok, job} = Enqueuer.push({Job})
+      assert_receive(:performed)
+      assert {Job, [], %{queue: "default", jid: _}} = job
       stop_process(pid)
     end
 
     test "enqueues and runs job from module and args" do
       {:ok, pid} = Enqueuer.start_link()
-      {:ok, job} = Enqueuer.push("default", {Job, ["foo", "bar"]})
-      assert_receive({:foo, :bar}, 5_000)
-      assert {Job, ["foo", "bar"], %{jid: _}} = job
+      {:ok, job} = Enqueuer.push({Job, ["foo", "bar"]})
+      assert_receive({:performed, "foo", "bar"})
+      assert {Job, ["foo", "bar"], %{queue: "default", jid: _}} = job
       stop_process(pid)
     end
 
     test "enqueues a job with :in delay" do
       {:ok, pid} = Enqueuer.start_link(scheduler_enable: true)
-      {:ok, job} = Enqueuer.push("default", {Job, [], %{in: 0}})
+      {:ok, job} = Enqueuer.push({Job, []}, [in: 0])
       assert_receive(:performed, 5_000)
-      assert {Job, [], %{jid: _}} = job
+      assert {Job, [], %{queue: "default", jid: _}} = job
       stop_process(pid)
     end
 
     test "enqueues a job with :at delay" do
       {:ok, pid} = Enqueuer.start_link(scheduler_enable: true)
-      {:ok, job} = Enqueuer.push("default", {Job, [], %{at: DateTime.utc_now()}})
-      assert_receive(:performed, 5_000)
-      assert {Job, [], %{jid: _}} = job
+      {:ok, job} = Enqueuer.push({Job, []}, [at: DateTime.utc_now()])
+      assert_receive(:performed)
+      assert {Job, [], %{queue: "default", jid: _}} = job
+      stop_process(pid)
+    end
+
+    test "enqueues a job to a specific queue" do
+      {:ok, pid} = Enqueuer.start_link(queues: ["q1", "q2"])
+      {:ok, job1} = Enqueuer.push({Job, [1]}, [queue: "q1"])
+      {:ok, job2} = Enqueuer.push({Job, [2]}, [queue: "q2"])
+      assert_receive({:performed, 1})
+      assert_receive({:performed, 2})
+      assert {Job, [1], %{queue: "q1", jid: _}} = job1
+      assert {Job, [2], %{queue: "q2", jid: _}} = job2
       stop_process(pid)
     end
   end
