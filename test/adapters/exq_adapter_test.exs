@@ -1,31 +1,31 @@
 defmodule GenQueue.ExqAdapterTest do
   use ExUnit.Case
 
+  import GenQueue.Test
   import GenQueue.ExqTestHelpers
 
-  Application.put_env(:gen_queue_exq, GenQueue.ExqAdapterTest.Enqueuer, adapter: GenQueue.ExqAdapter)
-
   defmodule Enqueuer do
+    Application.put_env(:gen_queue_exq, __MODULE__, adapter: GenQueue.ExqAdapter)
+
     use GenQueue, otp_app: :gen_queue_exq
   end
   
   defmodule Job do
     def perform do
-      send(:test, :performed)
+      send_item(Enqueuer, :performed)
     end
   
     def perform(arg1) do
-      send(:test, {:performed, arg1})
+      send_item(Enqueuer, {:performed, arg1})
     end
 
     def perform(arg1, arg2) do
-      send(:test, {:performed, arg1, arg2})
+      send_item(Enqueuer, {:performed, arg1, arg2})
     end
   end
 
   setup do
-    Process.register(self(), :test)
-    :ok
+    setup_global_test_queue(Enqueuer, :test)
   end
 
   describe "push/2" do

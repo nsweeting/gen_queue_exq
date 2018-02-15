@@ -1,18 +1,16 @@
 defmodule GenQueue.ExqMockAdapterTest do
   use ExUnit.Case
 
-  Application.put_env(:gen_queue_exq, GenQueue.ExqMockAdapterTest.Enqueuer, adapter: GenQueue.ExqMockAdapter)
+  import GenQueue.Test
 
   defmodule Enqueuer do
+    Application.put_env(:gen_queue_exq, __MODULE__, adapter: GenQueue.ExqMockAdapter)
+
     use GenQueue, otp_app: :gen_queue_exq
-  end
-  
-  defmodule Job do
   end
 
   setup do
-    Process.register(self(), :gen_queue_exq)
-    :ok
+    setup_test_queue(Enqueuer)
   end
 
   describe "push/2" do
@@ -42,7 +40,7 @@ defmodule GenQueue.ExqMockAdapterTest do
     end
 
     test "does nothing if process is not registered" do
-      Process.unregister(:gen_queue_exq)
+      reset_test_queue(Enqueuer)
       {:ok, _} = Enqueuer.push(Job)
     end
   end
