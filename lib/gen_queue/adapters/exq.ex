@@ -74,7 +74,7 @@ defmodule GenQueue.Adapters.Exq do
   end
 
   defp do_enqueue(gen_queue, job, args, %{delay: offset} = opts) when is_integer(offset) do
-    case Exq.enqueue_in(gen_queue, opts.queue, offset, job, args) do
+    case Exq.enqueue_in(gen_queue, opts.queue, round(offset / 1000), job, args) do
       {:ok, jid} -> {:ok, {job, args, Map.put(opts, :jid, jid)}}
       error -> error
     end
