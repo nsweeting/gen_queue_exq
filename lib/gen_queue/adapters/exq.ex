@@ -40,8 +40,12 @@ defmodule GenQueue.Adapters.Exq do
     do_enqueue(gen_queue, job, [], build_opts_map(opts))
   end
 
-  def handle_push(gen_queue, {job, args}, opts) do
+  def handle_push(gen_queue, {job, args}, opts) when is_list(args) do
     do_enqueue(gen_queue, job, args, build_opts_map(opts))
+  end
+
+  def handle_push(gen_queue, {job, arg}, opts) do
+    do_enqueue(gen_queue, job, [arg], build_opts_map(opts))
   end
 
   @doc false
