@@ -12,7 +12,7 @@ The package can be installed by adding `gen_queue_exq` to your list of dependenc
 ```elixir
 def deps do
   [
-    {:gen_queue_exq, "~> 0.1.0"}
+    {:gen_queue_exq, "~> 0.1.1"}
   ]
 end
 ```
