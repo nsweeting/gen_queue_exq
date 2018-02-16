@@ -16,12 +16,17 @@ defmodule GenQueue.Adapters.ExqMockTest do
   describe "push/2" do
     test "sends the job back to the registered process from module" do
       {:ok, _} = Enqueuer.push(Job)
-      assert_receive({Job, [], %{jid: _}})
+      assert_receive({Job, [], %{}})
     end
 
     test "sends the job back to the registered process from module tuple" do
       {:ok, _} = Enqueuer.push({Job})
-      assert_receive({Job, [], %{jid: _}})
+      assert_receive({Job, [], %{}})
+    end
+
+    test "sends the job back to the registered process from module and arg" do
+      {:ok, _} = Enqueuer.push({Job, "foo"})
+      assert_receive({Job, ["foo"], %{jid: _}})
     end
 
     test "sends the job back to the registered process from module and args" do

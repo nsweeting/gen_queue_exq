@@ -43,7 +43,7 @@ defmodule GenQueue.Adapters.ExqMock do
   end
 
   def handle_push(gen_queue, {job, arg}, opts) do
-    do_enqueue(gen_queue, job, [arg], ExqAdapter.build_opts_map(opts))
+    do_return(gen_queue, job, [arg], ExqAdapter.build_opts_map(opts))
   end
 
   @doc false

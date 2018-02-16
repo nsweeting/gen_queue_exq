@@ -53,6 +53,14 @@ defmodule GenQueue.Adapters.ExqTest do
       stop_process(pid)
     end
 
+    test "enqueues and runs job from module and arg" do
+      {:ok, pid} = Enqueuer.start_link()
+      {:ok, job} = Enqueuer.push({Job, "foo"})
+      assert_receive({:performed, "foo"})
+      assert {Job, ["foo"], %{queue: "default", jid: _}} = job
+      stop_process(pid)
+    end
+
     test "enqueues a job with millisecond based delay" do
       {:ok, pid} = Enqueuer.start_link(scheduler_enable: true)
       {:ok, job} = Enqueuer.push({Job, []}, delay: 0)
