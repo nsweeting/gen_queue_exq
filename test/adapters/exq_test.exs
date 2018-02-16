@@ -80,4 +80,11 @@ defmodule GenQueue.Adapters.ExqTest do
       stop_process(pid)
     end
   end
+
+  test "enqueuer can be started as part of a supervision tree" do
+    {:ok, pid} = Supervisor.start_link([{Enqueuer, []}], strategy: :one_for_one)
+    {:ok, job} = Enqueuer.push(Job)
+    assert_receive(:performed)
+    stop_process(pid)
+  end
 end

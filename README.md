@@ -56,6 +56,18 @@ our new `Enqueuer` module to our supervision tree.
   ]
 ```
 
+## Creating Jobs
+
+Jobs are simply modules with a `perform` method.
+
+```elixir
+defmodule MyJob do
+  def perform(arg1) do
+    IO.inspect(arg1)
+  end
+end
+```
+
 ## Enqueuing Jobs
 
 We can now easily enqueue jobs to `Exq`. The adapter will handle a variety of argument formats.
