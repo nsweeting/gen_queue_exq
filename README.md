@@ -1,4 +1,5 @@
 # GenQueue Exq
+[![Build Status](https://travis-ci.org/nsweeting/gen_queue_exq.svg?branch=master)](https://travis-ci.org/nsweeting/gen_queue_exq)
 [![GenQueue Exq Version](https://img.shields.io/hexpm/v/gen_queue_exq.svg)](https://hex.pm/packages/gen_queue_exq)
 
 This is an adapter for [GenQueue](https://github.com/nsweeting/gen_queue) to enable
