@@ -1,10 +1,10 @@
-defmodule GenQueue.ExqMockAdapterTest do
+defmodule GenQueue.Adapters.ExqMockTest do
   use ExUnit.Case
 
   import GenQueue.Test
 
   defmodule Enqueuer do
-    Application.put_env(:gen_queue_exq, __MODULE__, adapter: GenQueue.ExqMockAdapter)
+    Application.put_env(:gen_queue_exq, __MODULE__, adapter: GenQueue.Adapters.ExqMock)
 
     use GenQueue, otp_app: :gen_queue_exq
   end

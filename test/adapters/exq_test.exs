@@ -1,11 +1,11 @@
-defmodule GenQueue.ExqAdapterTest do
+defmodule GenQueue.Adapters.ExqTest do
   use ExUnit.Case
 
   import GenQueue.Test
   import GenQueue.ExqTestHelpers
 
   defmodule Enqueuer do
-    Application.put_env(:gen_queue_exq, __MODULE__, adapter: GenQueue.ExqAdapter)
+    Application.put_env(:gen_queue_exq, __MODULE__, adapter: GenQueue.Adapters.Exq)
 
     use GenQueue, otp_app: :gen_queue_exq
   end

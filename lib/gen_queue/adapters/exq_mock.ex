@@ -1,12 +1,10 @@
-defmodule GenQueue.ExqMockAdapter do
+defmodule GenQueue.Adapters.ExqMock do
   use GenQueue.Adapter
 
-  alias GenQueue.ExqAdapter
+  alias GenQueue.Adapters.Exq, as: ExqAdapter
 
-  def start_link(gen_queue, opts \\ []) do
-    opts
-    |> Keyword.merge(name: gen_queue)
-    |> Exq.start_link()
+  def start_link(_gen_queue, _opts) do
+    :ignore
   end
 
   def handle_push(gen_queue, module, opts) when is_atom(module) do

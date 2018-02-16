@@ -1,4 +1,4 @@
-defmodule GenQueue.ExqAdapter do
+defmodule GenQueue.Adapters.Exq do
   use GenQueue.Adapter
 
   @default_opts %{
