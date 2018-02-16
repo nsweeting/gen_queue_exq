@@ -29,14 +29,14 @@ defmodule GenQueue.Adapters.ExqMockTest do
       assert_receive({Job, ["foo", "bar"], %{jid: _}})
     end
 
-    test "sends the job back to the registered process with :in delay" do
-      {:ok, _} = Enqueuer.push({Job, []}, [in: 0])
-      assert_receive({Job, [], %{in: _, jid: _}})
+    test "sends the job back to the registered process with millisecond delay" do
+      {:ok, _} = Enqueuer.push({Job, []}, delay: 0)
+      assert_receive({Job, [], %{delay: _, jid: _}})
     end
 
-    test "sends the job back to the registered process with :at delay" do
-      {:ok, _} = Enqueuer.push({Job, []}, [at: DateTime.utc_now()])
-      assert_receive({Job, [], %{at: _, jid: _}})
+    test "sends the job back to the registered process with datetime delay" do
+      {:ok, _} = Enqueuer.push({Job, []}, delay: DateTime.utc_now())
+      assert_receive({Job, [], %{delay: _, jid: _}})
     end
 
     test "does nothing if process is not registered" do

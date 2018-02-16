@@ -93,11 +93,11 @@ We can now easily enqueue jobs to `Exq`. The adapter will handle a variety of ar
 {:ok, job} = Enqueuer.push({MyJob, "arg1"}, [queue: "foo"])
 
 # Schedule MyJob to "default" queue with "arg1" in 10 seconds
-{:ok, job} = Enqueuer.push({MyJob, "arg1"}, [in: 10])
+{:ok, job} = Enqueuer.push({MyJob, "arg1"}, [delay: 10_000])
 
 # Schedule MyJob to "default" queue with "arg1" at a specific time
 date = DateTime.utc_now()
-{:ok, job} = Enqueuer.push({MyJob, "arg1"}, [at: date])
+{:ok, job} = Enqueuer.push({MyJob, "arg1"}, [delay: date])
 ```
 
 ## Testing

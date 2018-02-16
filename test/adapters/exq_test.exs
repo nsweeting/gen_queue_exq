@@ -9,12 +9,12 @@ defmodule GenQueue.Adapters.ExqTest do
 
     use GenQueue, otp_app: :gen_queue_exq
   end
-  
+
   defmodule Job do
     def perform do
       send_item(Enqueuer, :performed)
     end
-  
+
     def perform(arg1) do
       send_item(Enqueuer, {:performed, arg1})
     end
@@ -53,17 +53,17 @@ defmodule GenQueue.Adapters.ExqTest do
       stop_process(pid)
     end
 
-    test "enqueues a job with :in delay" do
+    test "enqueues a job with millisecond based delay" do
       {:ok, pid} = Enqueuer.start_link(scheduler_enable: true)
-      {:ok, job} = Enqueuer.push({Job, []}, [in: 0])
+      {:ok, job} = Enqueuer.push({Job, []}, delay: 0)
       assert_receive(:performed, 5_000)
       assert {Job, [], %{queue: "default", jid: _}} = job
       stop_process(pid)
     end
 
-    test "enqueues a job with :at delay" do
+    test "enqueues a job with datetime based delay" do
       {:ok, pid} = Enqueuer.start_link(scheduler_enable: true)
-      {:ok, job} = Enqueuer.push({Job, []}, [at: DateTime.utc_now()])
+      {:ok, job} = Enqueuer.push({Job, []}, delay: DateTime.utc_now())
       assert_receive(:performed)
       assert {Job, [], %{queue: "default", jid: _}} = job
       stop_process(pid)
@@ -71,8 +71,8 @@ defmodule GenQueue.Adapters.ExqTest do
 
     test "enqueues a job to a specific queue" do
       {:ok, pid} = Enqueuer.start_link(queues: ["q1", "q2"])
-      {:ok, job1} = Enqueuer.push({Job, [1]}, [queue: "q1"])
-      {:ok, job2} = Enqueuer.push({Job, [2]}, [queue: "q2"])
+      {:ok, job1} = Enqueuer.push({Job, [1]}, queue: "q1")
+      {:ok, job2} = Enqueuer.push({Job, [2]}, queue: "q2")
       assert_receive({:performed, 1})
       assert_receive({:performed, 2})
       assert {Job, [1], %{queue: "q1", jid: _}} = job1

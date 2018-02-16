@@ -8,7 +8,7 @@ defmodule GenQueueExq.MixProject do
       app: :gen_queue_exq,
       version: @version,
       elixir: "~> 1.6",
-      start_permanent: Mix.env == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
       package: package(),
@@ -34,7 +34,7 @@ defmodule GenQueueExq.MixProject do
       files: ["lib", "mix.exs", "README*"],
       maintainers: ["Nicholas Sweeting"],
       licenses: ["MIT"],
-      links:  %{
+      links: %{
         "GitHub" => "https://github.com/nsweeting/gen_queue_exq",
         "GenQueue" => "https://github.com/nsweeting/gen_queue"
       }
@@ -43,6 +43,8 @@ defmodule GenQueueExq.MixProject do
 
   defp docs do
     [
+      extras: ["README.md"],
+      main: "readme",
       source_url: "https://github.com/nsweeting/gen_queue_exq"
     ]
   end
@@ -52,7 +54,7 @@ defmodule GenQueueExq.MixProject do
     [
       {:gen_queue, git: "https://github.com/nsweeting/gen_queue.git"},
       {:exq, "~> 0.10.1", runtime: false},
-      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 end
