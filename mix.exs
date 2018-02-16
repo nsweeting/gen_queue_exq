@@ -52,7 +52,7 @@ defmodule GenQueueExq.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:gen_queue, git: "https://github.com/nsweeting/gen_queue.git"},
+      {:gen_queue, "~> 0.1.4"},
       {:exq, "~> 0.10.1", runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
