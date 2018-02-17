@@ -12,7 +12,7 @@ The package can be installed by adding `gen_queue_exq` to your list of dependenc
 ```elixir
 def deps do
   [
-    {:gen_queue_exq, "~> 0.1.2"}
+    {:gen_queue_exq, "~> 0.1.3"}
   ]
 end
 ```
@@ -102,11 +102,11 @@ date = DateTime.utc_now()
 
 ## Testing
 
-Optionally, we can also have our tests use the `GenQueue.Adapters.ExqMock` adapter.
+Optionally, we can also have our tests use the `GenQueue.Adapters.MockJob` adapter.
 
 ```elixir
 config :my_app, Enqueuer, [
-  adapter: GenQueue.Adapters.ExqMock
+  adapter: GenQueue.Adapters.MockJob
 ]
 ```
 
@@ -126,7 +126,7 @@ defmodule MyJobTest do
 
   test "my enqueuer works" do
     {:ok, _} = Enqueuer.push(Job)
-    assert_receive({Job, [], %{jid: _}})
+    assert_receive(%GenQueue.Job{module: Job, args: []})
   end
 end
 ```

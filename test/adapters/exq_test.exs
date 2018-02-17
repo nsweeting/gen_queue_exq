@@ -33,7 +33,7 @@ defmodule GenQueue.Adapters.ExqTest do
       {:ok, pid} = Enqueuer.start_link()
       {:ok, job} = Enqueuer.push(Job)
       assert_receive(:performed)
-      assert {Job, [], %{queue: "default", jid: _}} = job
+      assert %GenQueue.Job{module: Job, args: [], queue: "default"} = job
       stop_process(pid)
     end
 
@@ -41,7 +41,7 @@ defmodule GenQueue.Adapters.ExqTest do
       {:ok, pid} = Enqueuer.start_link()
       {:ok, job} = Enqueuer.push({Job})
       assert_receive(:performed)
-      assert {Job, [], %{queue: "default", jid: _}} = job
+      assert %GenQueue.Job{module: Job, args: [], queue: "default"} = job
       stop_process(pid)
     end
 
@@ -49,7 +49,7 @@ defmodule GenQueue.Adapters.ExqTest do
       {:ok, pid} = Enqueuer.start_link()
       {:ok, job} = Enqueuer.push({Job, ["foo", "bar"]})
       assert_receive({:performed, "foo", "bar"})
-      assert {Job, ["foo", "bar"], %{queue: "default", jid: _}} = job
+      assert %GenQueue.Job{module: Job, args: ["foo", "bar"], queue: "default"} = job
       stop_process(pid)
     end
 
@@ -57,15 +57,15 @@ defmodule GenQueue.Adapters.ExqTest do
       {:ok, pid} = Enqueuer.start_link()
       {:ok, job} = Enqueuer.push({Job, "foo"})
       assert_receive({:performed, "foo"})
-      assert {Job, ["foo"], %{queue: "default", jid: _}} = job
+      assert %GenQueue.Job{module: Job, args: ["foo"], queue: "default"} = job
       stop_process(pid)
     end
 
     test "enqueues a job with millisecond based delay" do
       {:ok, pid} = Enqueuer.start_link(scheduler_enable: true)
       {:ok, job} = Enqueuer.push({Job, []}, delay: 0)
-      assert_receive(:performed, 5_000)
-      assert {Job, [], %{queue: "default", jid: _}} = job
+      assert_receive(:performed)
+      assert %GenQueue.Job{module: Job, args: [], queue: "default", delay: 0} = job
       stop_process(pid)
     end
 
@@ -73,7 +73,7 @@ defmodule GenQueue.Adapters.ExqTest do
       {:ok, pid} = Enqueuer.start_link(scheduler_enable: true)
       {:ok, job} = Enqueuer.push({Job, []}, delay: DateTime.utc_now())
       assert_receive(:performed)
-      assert {Job, [], %{queue: "default", jid: _}} = job
+      assert %GenQueue.Job{module: Job, args: [], queue: "default", delay: %DateTime{}} = job
       stop_process(pid)
     end
 
@@ -83,8 +83,8 @@ defmodule GenQueue.Adapters.ExqTest do
       {:ok, job2} = Enqueuer.push({Job, [2]}, queue: "q2")
       assert_receive({:performed, 1})
       assert_receive({:performed, 2})
-      assert {Job, [1], %{queue: "q1", jid: _}} = job1
-      assert {Job, [2], %{queue: "q2", jid: _}} = job2
+      assert %GenQueue.Job{module: Job, args: [1], queue: "q1"} = job1
+      assert %GenQueue.Job{module: Job, args: [2], queue: "q2"} = job2
       stop_process(pid)
     end
   end
